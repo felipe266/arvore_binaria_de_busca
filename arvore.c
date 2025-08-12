@@ -35,10 +35,16 @@ no* buscar(no* aux, int chave){
 }
 
 //maior dos menores
-
+no* maior_dos_menores(no* aux, no** pai){
+    while (aux->esq != NULL){
+        *pai= aux;
+        aux = aux->esq;
+    }
+    return aux;
+}
 
 no* excluir(no* aux, int chave){
-    if (aux != NULL){
+    if (aux == NULL){
         return aux;
     }else{
         if (aux->valor == chave){
@@ -54,10 +60,22 @@ no* excluir(no* aux, int chave){
                 free(aux);
                 return temp;
             }else{
-
+                no* pai = aux;
+                no* subistuir = maior_dos_menores(aux->dir, &pai);
+                printf("valor cara%d\n", subistuir->valor);
+                if (pai->valor == chave){
+                    pai->dir = NULL;
+                }else{
+                    pai->esq = NULL;
+                }
+                subistuir->dir = aux->dir;
+                subistuir->esq = aux->esq;
+                if (raiz->valor == chave){
+                    raiz = subistuir;
+                }
+                free(aux);
+                return subistuir;
             }
-            
-            
         }
         if (aux->valor < chave){
             if (aux->dir != NULL){
@@ -72,9 +90,7 @@ no* excluir(no* aux, int chave){
                 return aux;
             }
         }
-        
     }
-    
 }
 
 void add(int chave){
@@ -93,10 +109,8 @@ void add(int chave){
             free(novo);
         }else{
             if (aux->valor < chave){
-                printf("aqui: %d\n", aux->valor);
                 aux->dir = novo;
             }else{
-                printf("%d: %d\n",novo->valor, aux->valor);
                 aux->esq = novo;
             }
         }
@@ -116,6 +130,14 @@ int main(){
     add(20);
     add(15);
     add(21);
+    add(10);
+    add(11);
+    add(19);
+    add(16);
+    add(18);
+    add(8);
+    add(9);
+    excluir(raiz, 20);
     printar(raiz);
 
     return 0;
